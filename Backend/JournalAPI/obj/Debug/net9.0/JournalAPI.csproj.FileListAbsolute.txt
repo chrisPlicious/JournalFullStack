@@ -165,3 +165,4 @@ C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\obj\De
 C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\obj\Debug\net9.0\JournalAPI.pdb
 C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\obj\Debug\net9.0\JournalAPI.genruntimeconfig.cache
 C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\obj\Debug\net9.0\ref\JournalAPI.dll
+C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\obj\Debug\net9.0\JournalAPI.sourcelink.json

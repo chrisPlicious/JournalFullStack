@@ -12,7 +12,7 @@ import type { Journal } from "@/models/journal";
 import AppSidebar from "@/components/layouts/side-bar";
 import { Button } from "@/components/ui/button";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { NavLink } from "react-router";
+// import { NavLink } from "react-router";
 import {
   Select,
   SelectContent,
@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import JournalDialog from "@/components/JournalView/Viewer";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 
@@ -98,17 +99,18 @@ export default function LandingPage() {
                     Created: {new Date(entry.createdAt).toLocaleDateString()}
                   </span>
                   <div className="grid grid-cols-2 gap-2">
+                    <JournalDialog
+                      entry={entry}
+                      trigger={
+                        <Button className="bg-white text-black hover:bg-muted">
+                          View
+                        </Button>
+                      }
+                    />
                     <Button
-                      asChild
-                      className="bg-white text-black transition-colors duration-100 hover:bg-white hover:text-black"
-                    >
-                      <NavLink to="/entry">View</NavLink>
-                    </Button>
-                    <Button
-                      variant={"destructive"}
+                      variant="destructive"
                       onClick={() => handleDelete(entry.id)}
                       disabled={loading}
-                      className=""
                     >
                       {loading ? "Deleting..." : "Delete"}
                     </Button>

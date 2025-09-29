@@ -1,9 +1,9 @@
 import axios from "axios";
 import type { CreateJournalDto } from "../models/journal";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
-// Create 
+// Create
 export const createJournal = async (data: CreateJournalDto) => {
   const res = await axios.post(`${API_URL}/journalentries`, data);
   return res.data;

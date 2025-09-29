@@ -118,7 +118,15 @@ export default function JournalForm() {
             <label className="scroll-m-20 text-2xl font-semibold tracking-tight">
               Content
             </label>
-            <ShadcnTextEditor />
+            <ShadcnTextEditor
+              value={content}
+              onChange={setContent}
+              error={error.content}
+             
+            />
+            {error.content && (
+              <p className="text-red-500">Content is required</p>
+            )}
           </CardContent>
           <CardFooter className="mx-4 my-4">
             <Button
