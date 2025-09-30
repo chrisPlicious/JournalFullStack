@@ -4,6 +4,8 @@ import NewEntry from "./pages/NewEntry";
 import JournalEntries from "./pages/JournalEntries";
 import Home from "./pages/Home";
 import EditEntry from "./pages/EditEntry";
+import LoginPage from "./pages/authpage/LoginPage";
+import RegisterPage from "./pages/authpage/RegisterPage";
 
 function App() {
   return (
@@ -14,6 +16,9 @@ function App() {
         <Route path="add-entry" element={<NewEntry />} />
         <Route path="edit-entry/:id" element={<EditEntry />} />
         <Route path="entries" element={<JournalEntries />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
+        
       </Routes>
     </BrowserRouter>
   );
