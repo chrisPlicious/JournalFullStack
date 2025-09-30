@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JournalAPI.Migrations
 {
     [DbContext(typeof(JournalDbContext))]
-    [Migration("20250923025030_AddedCategoryAndUpdate")]
-    partial class AddedCategoryAndUpdate
+    [Migration("20250930084556_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

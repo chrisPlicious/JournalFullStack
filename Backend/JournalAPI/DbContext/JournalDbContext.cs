@@ -1,4 +1,6 @@
 using JournalAPI.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace JournalAPI.Data;
@@ -7,7 +9,7 @@ public class JournalDbContext : DbContext
 {
     public JournalDbContext(DbContextOptions<JournalDbContext> options) : base(options) { }
 
-    public DbSet<JournalModels> JournalEntries { get; set; }  
+    public DbSet<JournalModels> JournalEntries { get; set; }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
@@ -23,4 +25,11 @@ public class JournalDbContext : DbContext
 
         return await base.SaveChangesAsync(cancellationToken);
     }
+}
+
+public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+{
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
+        base(options)
+    { }
 }
