@@ -3,6 +3,7 @@ import LandingPage from "./pages/LandingPage";
 import NewEntry from "./pages/NewEntry";
 import JournalEntries from "./pages/JournalEntries";
 import Home from "./pages/Home";
+import EditEntry from "./pages/EditEntry";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="home" element={<Home />} />
         <Route path="add-entry" element={<NewEntry />} />
+        <Route path="edit-entry/:id" element={<EditEntry />} />
         <Route path="entries" element={<JournalEntries />} />
       </Routes>
     </BrowserRouter>

@@ -7,7 +7,7 @@ public class JournalDbContext : DbContext
 {
     public JournalDbContext(DbContextOptions<JournalDbContext> options) : base(options) { }
 
-    public DbSet<JournalModels> JournalEntries { get; set; }  // ✅ must match what repo uses
+    public DbSet<JournalModels> JournalEntries { get; set; }  
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

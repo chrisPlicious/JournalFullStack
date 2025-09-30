@@ -19,8 +19,8 @@ export default function AppSidebar() {
   ];
 
   return (
-    <Sidebar className="border-r dark:border-slate-800 bg-black">
-      <SidebarContent className="bg-black">
+    <Sidebar className="border-r dark:border-slate-800 border-black">
+      <SidebarContent className="bg-zinc-800">
         {/* Header */}
         <SidebarGroup className="mb-6">
           <SidebarGroupLabel>
