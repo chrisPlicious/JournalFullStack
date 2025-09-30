@@ -44,22 +44,20 @@ export default function JournalDialog({
       {/* if trigger was provided, use it as the DialogTrigger */}
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
 
-      <DialogContent className="max-w-4xl w-full bg-white text-black">
+      <DialogContent className="sm:max-w-5xl w-full max-h-[80vh] overflow-y-auto bg-white text-black">
         <DialogHeader>
           <DialogTitle className="text-3xl font-bold">
             {entry.title}
           </DialogTitle>
-
           {/* Hidden description for accessibility (avoids missing-description warning) */}
           <DialogDescription className="sr-only">
             Journal entry details for {entry.title}
           </DialogDescription>
         </DialogHeader>
-
         {/* metadata moved outside DialogDescription to avoid invalid nesting */}
-        <div className="flex justify-between text-gray-500 text-sm mt-1">
+        <div className="flex justify-between text-lg mt-1">
           <span>Category: {entry.category ?? "—"}</span>
-          <span>
+          <span >
             Created: {createdAt ? createdAt.toLocaleDateString() : "N/A"}
           </span>
           <span>
@@ -68,14 +66,10 @@ export default function JournalDialog({
         </div>
 
         <Separator className="my-4" />
-
-        {/* <pre className="text-xs text-gray-500">
-          {JSON.stringify(entry, null, 2)}
-        </pre> */}
         {/* content */}
-        <div className="prose max-w-none text-gray-800">
-          {entry.Content ? ( // 👈 notice uppercase
-            <div dangerouslySetInnerHTML={{ __html: entry.Content }} />
+        <div className="prose max-w-none text-black text-xl">
+          {entry.content ? ( // 👈 notice uppercase
+            <div dangerouslySetInnerHTML={{ __html: entry.content }} />
           ) : (
             <p className="text-gray-400 italic">(No content)</p>
           )}
