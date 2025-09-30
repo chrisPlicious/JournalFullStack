@@ -166,3 +166,11 @@ C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\obj\De
 C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\obj\Debug\net9.0\JournalAPI.genruntimeconfig.cache
 C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\obj\Debug\net9.0\ref\JournalAPI.dll
 C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\obj\Debug\net9.0\JournalAPI.sourcelink.json
+C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\bin\Debug\net9.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\bin\Debug\net9.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\bin\Debug\net9.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\bin\Debug\net9.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\bin\Debug\net9.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\bin\Debug\net9.0\MySqlConnector.dll
+C:\Users\TRAINEE-MATUGUINA\Documents\FullStack-ForEval\Backend\JournalAPI\bin\Debug\net9.0\Pomelo.EntityFrameworkCore.MySql.dll

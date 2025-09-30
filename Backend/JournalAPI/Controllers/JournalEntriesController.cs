@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using JournalAPI.Services;
 using JournalAPI.DTOs;
 // using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ namespace JournalAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class JournalEntriesController : ControllerBase
 {
     private readonly IJournalService _service;

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\TRAINEE-MATUGUINA\\Documents\\FullStack-ForEval\\Backend\\JournalAPI\\JournalAPI.csproj": {}
+    "c:\\Users\\TRAINEE-MATUGUINA\\Documents\\FullStack-ForEval\\Backend\\JournalAPI\\JournalAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\TRAINEE-MATUGUINA\\Documents\\FullStack-ForEval\\Backend\\JournalAPI\\JournalAPI.csproj": {
+    "c:\\Users\\TRAINEE-MATUGUINA\\Documents\\FullStack-ForEval\\Backend\\JournalAPI\\JournalAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\TRAINEE-MATUGUINA\\Documents\\FullStack-ForEval\\Backend\\JournalAPI\\JournalAPI.csproj",
+        "projectUniqueName": "c:\\Users\\TRAINEE-MATUGUINA\\Documents\\FullStack-ForEval\\Backend\\JournalAPI\\JournalAPI.csproj",
         "projectName": "JournalAPI",
-        "projectPath": "C:\\Users\\TRAINEE-MATUGUINA\\Documents\\FullStack-ForEval\\Backend\\JournalAPI\\JournalAPI.csproj",
+        "projectPath": "c:\\Users\\TRAINEE-MATUGUINA\\Documents\\FullStack-ForEval\\Backend\\JournalAPI\\JournalAPI.csproj",
         "packagesPath": "C:\\Users\\TRAINEE-MATUGUINA\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\TRAINEE-MATUGUINA\\Documents\\FullStack-ForEval\\Backend\\JournalAPI\\obj\\",
+        "outputPath": "c:\\Users\\TRAINEE-MATUGUINA\\Documents\\FullStack-ForEval\\Backend\\JournalAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,6 +50,14 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[9.0.7, )"
@@ -67,6 +75,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[9.0.9, )"
+            },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[8.14.0, )"
             },
             "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
               "target": "Package",
