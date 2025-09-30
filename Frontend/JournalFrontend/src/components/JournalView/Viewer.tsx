@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import type { Journal } from "@/models/journal";
+import { Link } from "react-router";
+import { Button } from "@/components/ui/button";
 
 interface JournalDialogProps {
   entry: Journal | null;
@@ -46,8 +48,13 @@ export default function JournalDialog({
 
       <DialogContent className="sm:max-w-5xl w-full max-h-[80vh] overflow-y-auto bg-white text-black">
         <DialogHeader>
-          <DialogTitle className="text-3xl font-bold">
+          <DialogTitle className="flex justify-between text-3xl font-bold pr-10">
             {entry.title}
+            <Link to={`/edit-entry/${entry.id}`}>
+              <Button className="bg-zinc-800 text-white hover:bg-black text-lg">
+                Edit
+              </Button>
+            </Link>
           </DialogTitle>
           {/* Hidden description for accessibility (avoids missing-description warning) */}
           <DialogDescription className="sr-only">
@@ -57,7 +64,7 @@ export default function JournalDialog({
         {/* metadata moved outside DialogDescription to avoid invalid nesting */}
         <div className="flex justify-between text-lg mt-1">
           <span>Category: {entry.category ?? "—"}</span>
-          <span >
+          <span>
             Created: {createdAt ? createdAt.toLocaleDateString() : "N/A"}
           </span>
           <span>
@@ -68,7 +75,7 @@ export default function JournalDialog({
         <Separator className="my-4" />
         {/* content */}
         <div className="prose max-w-none text-black text-xl">
-          {entry.content ? ( // 👈 notice uppercase
+          {entry.content ? (
             <div dangerouslySetInnerHTML={{ __html: entry.content }} />
           ) : (
             <p className="text-gray-400 italic">(No content)</p>

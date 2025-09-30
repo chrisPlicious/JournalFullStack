@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -20,7 +20,11 @@ import {
 } from "@/components/ui/select";
 import ShadcnTextEditor from "@/components/TextEditor/textEditor";
 import { useParams } from "react-router";
-import { createJournal, updateJournal } from "@/services/journalApi";
+import {
+  createJournal,
+  updateJournal,
+  getJournalById,
+} from "@/services/journalApi";
 
 export default function JournalForm() {
   const [title, setTitle] = useState("");
@@ -34,8 +38,25 @@ export default function JournalForm() {
     content: false,
   });
 
-  // inside your component
   const { id } = useParams<{ id: string }>();
+
+  // Prefill data if editing
+  useEffect(() => {
+    if (id) {
+      setLoading(true);
+      getJournalById(Number(id))
+        .then((entry) => {
+          setTitle(entry.title || "");
+          setCategory(entry.category || "");
+          setContent(entry.content || "");
+        })
+        .catch((err) => {
+          console.error(err);
+          toast.error("Failed to load journal ❌");
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [id]);
 
   const handleSubmit = async () => {
     const newErrors = {
@@ -55,15 +76,13 @@ export default function JournalForm() {
       setLoading(true);
 
       if (id) {
-        // EDIT MODE
         await updateJournal(Number(id), { title, category, content });
         toast.success("Journal entry updated successfully ✏️");
       } else {
-        // CREATE MODE (your existing code)
         await createJournal({ title, category, content });
         toast.success("Journal entry created successfully ✅");
 
-        // Reset form only in create mode
+        // Reset form
         setTitle("");
         setCategory("");
         setContent("");
@@ -81,16 +100,14 @@ export default function JournalForm() {
 
   return (
     <SidebarProvider className="flex min-h-screen">
-      {/* Sidebar on the left */}
       <AppSidebar />
       <Toaster richColors position="top-center" />
 
-      {/* Main content area (form) */}
       <div className="flex flex-1 items-center justify-center">
         <Card className=" w-7xl shadow-xl">
           <CardHeader>
             <CardTitle className="scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance">
-              Add Journal Entry
+              {id ? "Edit Journal Entry" : "Add Journal Entry"}
             </CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-3 space-y-0 gap-10 mt-4 mx-4">
@@ -142,11 +159,12 @@ export default function JournalForm() {
           </CardContent>
           <CardFooter className="mx-4 my-4">
             <Button
+              type="button"
               onClick={handleSubmit}
               disabled={loading}
               className="w-full"
             >
-              {loading ? "Submitting..." : "Submit"}
+              {loading ? "Submitting..." : id ? "Save Changes" : "Submit"}
             </Button>
           </CardFooter>
         </Card>

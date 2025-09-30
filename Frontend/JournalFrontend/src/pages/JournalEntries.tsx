@@ -44,25 +44,24 @@ export default function LandingPage() {
   }, []);
 
   const handleDelete = (id: number) => {
-  toast("Are you sure you want to delete?", {
-    description: "This action cannot be undone.",
-    duration: 5000, // how long toast stays
-    action: {
-      label: "Yes, Delete",
-      onClick: async () => {
-        try {
-          await deleteJournal(id);
-          setJournals((prev) => prev.filter((journal) => journal.id !== id));
-          toast.success("Journal entry deleted successfully ✅");
-        } catch (err) {
-          console.error("Failed to delete journal entry", err);
-          toast.error("Failed to delete journal entry ❌");
-        }
+    toast("Are you sure you want to delete?", {
+      description: "This action cannot be undone.",
+      duration: 5000, // how long toast stays
+      action: {
+        label: "Yes, Delete",
+        onClick: async () => {
+          try {
+            await deleteJournal(id);
+            setJournals((prev) => prev.filter((journal) => journal.id !== id));
+            toast.success("Journal entry deleted successfully ✅");
+          } catch (err) {
+            console.error("Failed to delete journal entry", err);
+            toast.error("Failed to delete journal entry ❌");
+          }
+        },
       },
-    },
-  });
-};
-
+    });
+  };
 
   const handleOpen = async (isOpen: boolean, id?: number) => {
     setOpen(isOpen);
@@ -84,7 +83,7 @@ export default function LandingPage() {
   }
 
   return (
-    <SidebarProvider className="flex min-h-screen">
+    <SidebarProvider className="flex min-h-screen ">
       <AppSidebar />
       <div className="py-10 px-25 flex-1">
         <div className="flex-cols gap-5 items-center mb-6">
@@ -103,14 +102,14 @@ export default function LandingPage() {
           </Select>
         </div>
 
-        <Separator className="mb-6 h-[3px] shadow" />
+        <Separator className="mb-6 h-[3px] shadow bg-neutral-500" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6  ">
           {filteredJournals.length > 0 ? (
             filteredJournals.map((entry) => (
               <Card
                 key={entry.id}
-                className="flex flex-col justify-between bg-black transform hover:scale-102 transition-transform duration-500"
+                className="flex flex-col justify-between border-neutral-800 bg-zinc-800 transform hover:scale-102 transition-transform duration-500"
               >
                 <CardHeader>
                   <CardTitle className="text-2xl font-semibold text-white">

@@ -20,9 +20,6 @@ else
         options.UseSqlServer(localConn));
 }
 
-// Connect to SQL Server
-// builder.Services.AddDbContext<JournalDbContext>(options =>
-//     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add repositories and services
 builder.Services.AddScoped<IJournalRepository, JournalRepository>();
@@ -56,7 +53,7 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.EnsureCreated(); // Apply migrations at startup
 }
 
-    app.UseSwagger();
+app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
 // ✅ Apply the named CORS policy BEFORE Authorization
