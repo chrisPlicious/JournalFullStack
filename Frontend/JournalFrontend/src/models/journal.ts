@@ -1,7 +1,7 @@
 export interface Journal {
   id: number;
   title: string;
-  Content: string;
+  content: string;
   category: string;
   createdAt: string;
   updatedAt: string;

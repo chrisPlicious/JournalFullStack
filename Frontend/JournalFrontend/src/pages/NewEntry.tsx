@@ -70,7 +70,7 @@ export default function JournalForm() {
     <SidebarProvider className="flex min-h-screen">
       {/* Sidebar on the left */}
       <AppSidebar />
-      <Toaster position="top-center" />
+      <Toaster richColors position="top-center" />
 
       {/* Main content area (form) */}
       <div className="flex flex-1 items-center justify-center">
@@ -139,6 +139,7 @@ export default function JournalForm() {
           </CardFooter>
         </Card>
       </div>
+      
     </SidebarProvider>
   );
 }

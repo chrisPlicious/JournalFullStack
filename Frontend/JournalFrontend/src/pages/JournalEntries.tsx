@@ -6,7 +6,7 @@ import {
   // CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { deleteJournal } from "@/services/journalApi";
+import { deleteJournal, getJournalById } from "@/services/journalApi";
 import { getJournals } from "@/services/journalApi";
 import type { Journal } from "@/models/journal";
 import AppSidebar from "@/components/layouts/side-bar";
@@ -23,11 +23,15 @@ import {
 import JournalDialog from "@/components/JournalView/Viewer";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
+// import { X } from "lucide-react";
+import { Toaster } from "sonner";
 
 export default function LandingPage() {
   const [journals, setJournals] = useState<Journal[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [open, setOpen] = useState(false);
+  const [detail, setDetail] = useState<Journal | null>(null);
 
   useEffect(() => {
     getJournals()
@@ -39,14 +43,34 @@ export default function LandingPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteJournal(id);
-      toast.success("Journal entry deleted successfully ✅");
-      setJournals(journals.filter((journal) => journal.id !== id));
-    } catch (err) {
-      console.error("Failed to delete journal entry", err);
-      toast.error("Failed to delete journal entry ❌");
+  const handleDelete = (id: number) => {
+  toast("Are you sure you want to delete?", {
+    description: "This action cannot be undone.",
+    duration: 5000, // how long toast stays
+    action: {
+      label: "Yes, Delete",
+      onClick: async () => {
+        try {
+          await deleteJournal(id);
+          setJournals((prev) => prev.filter((journal) => journal.id !== id));
+          toast.success("Journal entry deleted successfully ✅");
+        } catch (err) {
+          console.error("Failed to delete journal entry", err);
+          toast.error("Failed to delete journal entry ❌");
+        }
+      },
+    },
+  });
+};
+
+
+  const handleOpen = async (isOpen: boolean, id?: number) => {
+    setOpen(isOpen);
+    if (isOpen && id) {
+      const fullEntry = await getJournalById(id);
+      setDetail(fullEntry);
+    } else {
+      setDetail(null);
     }
   };
 
@@ -99,14 +123,13 @@ export default function LandingPage() {
                     Created: {new Date(entry.createdAt).toLocaleDateString()}
                   </span>
                   <div className="grid grid-cols-2 gap-2">
-                    <JournalDialog
-                      entry={entry}
-                      trigger={
-                        <Button className="bg-white text-black hover:bg-muted">
-                          View
-                        </Button>
-                      }
-                    />
+                    <Button
+                      className="bg-white text-black hover:bg-muted"
+                      onClick={() => handleOpen(true, entry.id)} // 👈 open with id
+                    >
+                      View
+                    </Button>
+
                     <Button
                       variant="destructive"
                       onClick={() => handleDelete(entry.id)}
@@ -119,12 +142,18 @@ export default function LandingPage() {
               </Card>
             ))
           ) : (
-            <p className="col-span-full text-center text-gray-400">
+            <p className=" col-span-full text-2xl text-center text-gray-400">
               No journal entries found.
             </p>
           )}
         </div>
+        <JournalDialog
+          entry={detail}
+          open={open}
+          onOpenChange={(o) => handleOpen(o)}
+        />
       </div>
+      <Toaster richColors position="top-center" />
     </SidebarProvider>
   );
 }
