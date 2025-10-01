@@ -1,5 +1,5 @@
-import { NavLink } from "react-router-dom";
-import { Home, List, Plus } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { Home, List, Plus, LogOut } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -10,8 +10,23 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
+import { logout } from "@/services/authApi";
 
 export default function AppSidebar() {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (err) {
+      console.error("Logout failed", err);
+    } finally {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      navigate("/login");
+    }
+  };
+
   const items = [
     { title: "Home", to: "/home", icon: Home },
     { title: "All Entries", to: "/entries", icon: List },
@@ -61,6 +76,15 @@ export default function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={handleLogout}
+                  className="flex items-center gap-3 px-2 py-2 rounded-md text-sm transition-colors duration-150 hover-bg-white bg-white text-black"
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Logout</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

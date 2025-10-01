@@ -12,9 +12,12 @@ using System.Text.Json;
 var builder = WebApplication.CreateBuilder(args);
 var env = builder.Environment.EnvironmentName;
 
-// ------------------- DATABASES -------------------
+// ------------------- DEBUG CONFIG -------------------
+Console.WriteLine($"JWT Issuer: {builder.Configuration["Jwt:Issuer"]}");
+Console.WriteLine($"JWT Audience: {builder.Configuration["Jwt:Audience"]}");
+Console.WriteLine($"JWT Key: {builder.Configuration["Jwt:Key"]?.Substring(0, 10)}...");
 
-// JournalDbContext (your journal entries)
+// ------------------- DATABASES -------------------
 if (env == "Docker")
 {
     var dockerConn = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -28,38 +31,31 @@ else
         options.UseSqlServer(localConn));
 }
 
-// ApplicationDbContext (Identity)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     var identityConn = builder.Configuration.GetConnectionString("IdentityConnection")
                        ?? builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseSqlServer(identityConn); // or UseMySql if needed
+    options.UseSqlServer(identityConn);
 });
 
 // ------------------- IDENTITY -------------------
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
-    // Password settings
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 8;
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireLowercase = true;
-
-    // Lockout settings
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.AllowedForNewUsers = true;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-// ------------------- JWT AUTHENTICATION -------------------
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
+// ------------------- JWT AUTH -------------------
+var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new Exception("JWT Key not configured");
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -68,22 +64,23 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
     };
+
     options.Events = new JwtBearerEvents
     {
         OnAuthenticationFailed = context =>
         {
             var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-            logger.LogError("Authentication failed: {Exception}", context.Exception.Message);
+            logger.LogError("JWT Auth failed: {Exception}", context.Exception.Message);
             return Task.CompletedTask;
         },
         OnTokenValidated = context =>
         {
             var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-            logger.LogInformation("Token validated for user: {User}", context.Principal?.Identity?.Name);
+            logger.LogInformation("JWT validated for {User}", context.Principal?.Identity?.Name);
             return Task.CompletedTask;
         }
     };
@@ -95,7 +92,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IJournalRepository, JournalRepository>();
 builder.Services.AddScoped<IJournalService, JournalService>();
 
-// ------------------- CONTROLLERS & JSON -------------------
+// ------------------- CONTROLLERS -------------------
 builder.Services.AddControllers()
     .AddJsonOptions(opts =>
     {
@@ -108,12 +105,13 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "JWT Auth Header using the Bearer Scheme. Example: \"Authorization: Bearer {token}\"",
+        Description = "JWT Authorization header. Example: \"Bearer {token}\"",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
+
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -141,7 +139,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// ------------------- MIGRATIONS & SEEDING -------------------
+// ------------------- MIGRATIONS -------------------
 using (var scope = app.Services.CreateScope())
 {
     var journalDb = scope.ServiceProvider.GetRequiredService<JournalDbContext>();
@@ -150,7 +148,6 @@ using (var scope = app.Services.CreateScope())
     var identityDb = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     identityDb.Database.Migrate();
 
-    // Optional: Seed default roles/admin user
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
@@ -160,19 +157,27 @@ using (var scope = app.Services.CreateScope())
     if (await userManager.FindByNameAsync("admin") == null)
     {
         var adminUser = new IdentityUser { UserName = "admin", Email = "admin@example.com", EmailConfirmed = true };
-        await userManager.CreateAsync(adminUser, "Admin@123"); // strong password
+        await userManager.CreateAsync(adminUser, "Admin@123");
         await userManager.AddToRoleAsync(adminUser, "Admin");
     }
 }
 
 // ------------------- MIDDLEWARE -------------------
 app.UseSwagger();
-app.UseSwaggerUI(); // Dev: no authorization needed
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseCors("DevCors");
 
-app.UseAuthentication(); // <--- REQUIRED for Identity
+// Debug logging middleware
+app.Use(async (context, next) =>
+{
+    var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+    Console.WriteLine($"Auth header: {authHeader}");
+    await next();
+});
+
+app.UseAuthentication();   // must be BEFORE UseAuthorization
 app.UseAuthorization();
 
 app.MapControllers();
