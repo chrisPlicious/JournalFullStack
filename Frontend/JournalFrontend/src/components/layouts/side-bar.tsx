@@ -10,14 +10,14 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
-import { logout } from "@/services/authApi";
+import { logoutUser } from "../../services/authApi";
 
 export default function AppSidebar() {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await logoutUser();
     } catch (err) {
       console.error("Logout failed", err);
     } finally {

@@ -1,98 +1,72 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Link, useNavigate } from "react-router";
-import { useState } from "react";
-import { login } from "@/services/authApi";
+import React, { useState } from "react";
+import { loginUser } from "../../services/authApi"; // matches your folder structure
+import { useNavigate, Link } from "react-router-dom";
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
+// Shadcn UI components
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+
+const LoginPage: React.FC = () => {
+  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  try {
-    const response = await login({ UserName: email, Password: password });
-
-    // token is already stored in login() service
-    localStorage.setItem("user", JSON.stringify(response.User));
-
-    navigate("/home");
-  } catch (err: any) {
-    setError(err.response?.data || "Login failed");
-  }
-};
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await loginUser({ userName, password });
+      navigate("/home"); // redirect after login
+    } catch (err: any) {
+      setError(err.response?.data || "Login failed");
+    }
+  };
 
   return (
-    <div className="flex justify-center items-center h-screen ">
-      <Card className="w-full max-w-sm scale-140 ">
-        <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
-          <CardAction>
-            <Button variant={"link"}>
-              <Link to="/register">Signup</Link>
-            </Button>
-          </CardAction>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              {error && <p className="text-red-500">{error}</p>}
-            </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button type="submit" onClick={handleSubmit} className="w-full">
-            Login
-          </Button>
-          <Button variant="outline" className="w-full">
-            Login with Google
-          </Button>
-        </CardFooter>
-      </Card>
+    <div className="flex justify-center items-center h-screen bg-gray-50">
+      <form
+        className="p-8 bg-white rounded-lg shadow-md w-full max-w-md"
+        onSubmit={handleLogin}
+      >
+        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+
+        <div className="mb-4">
+          <Label htmlFor="username">Username</Label>
+          <Input
+            id="username"
+            type="text"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <Button type="submit" className="w-full">
+          Login
+        </Button>
+
+        <p className="mt-4 text-center">
+          Don't have an account?{" "}
+          <Link className="text-blue-500" to="/register">
+            Sign Up
+          </Link>
+        </p>
+      </form>
     </div>
   );
-}
+};
+
+export default LoginPage;
